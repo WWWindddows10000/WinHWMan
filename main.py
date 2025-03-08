@@ -6,7 +6,6 @@ import numpy as np
 import zlib
 import win32com.client
 import os
+import OCR
 
-scanner = scan.SilentScanner()
-scanner.scan()
-image = cv2.imread('scanned.jpg')
+while True:

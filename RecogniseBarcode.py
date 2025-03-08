@@ -1,3 +1,4 @@
+#弃用，改手写识别
 import cv2
 import numpy as np
 import scanner as scan
@@ -23,24 +24,44 @@ ENCODING_TABLE = {
 DECODING_TABLE = {v:k for k,v in ENCODING_TABLE.items()}
 
 def recognise(image):
-
-    
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # 使用自适应阈值进行二值化，增强鲁棒性
+    
+    # 改进1：使用闭操作连接条码区域
     binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                cv2.THRESH_BINARY_INV, 11, 2)
-    edges = cv2.Canny(binary, 100, 200)  
-    top_threshold_pixels = 24
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  
+                                  cv2.THRESH_BINARY_INV, 21, 5)  # 增大块大小
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+    closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel, iterations=3)
+    
+    # 改进2：直接使用二值化图像找轮廓（而非Canny）
+    contours, _ = cv2.findContours(closed, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    
+    # 改进3：动态合并相邻轮廓
+    merged_contours = []
+    prev_x, prev_y, prev_w, prev_h = -999, -999, 0, 0  # 初始值
+    for cnt in sorted(contours, key=lambda c: cv2.boundingRect(c)[0]):  # 按x坐标排序
+        x, y, w, h = cv2.boundingRect(cnt)
+        
+        # 水平合并条件：相邻区域间隔小于20像素且高度重叠
+        if (x - (prev_x + prev_w) < 20) and (abs(y - prev_y) < 0.3 * max(h, prev_h)):
+            prev_w = x + w - prev_x
+            prev_h = max(prev_h, y + h - prev_y)
+        else:
+            if prev_w > 0:
+                merged_contours.append((prev_x, prev_y, prev_w, prev_h))
+            prev_x, prev_y, prev_w, prev_h = x, y, w, h
+    if prev_w > 0:
+        merged_contours.append((prev_x, prev_y, prev_w, prev_h))
+    
+    # 筛选条件优化
     barcode_contours = []
-    for cnt in contours:
-        x, y, w, h = cv2.boundingRect(cnt)  
+    top_threshold_pixels = 24
+    for (x, y, w, h) in merged_contours:
         aspect_ratio = w / h
-        # 添加条件：y坐标需大于顶部阈值
-        if aspect_ratio > 1.5 and y > top_threshold_pixels and w > 35:
+        # 放宽长宽比限制，增加垂直方向判断
+        if (aspect_ratio > 1.2 or h / w > 1.2) and y > top_threshold_pixels and w > 20:
             barcode_contours.append((x, y, w, h))
-            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)  
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    
     return barcode_contours
 
 def mm_to_pixels(mm, dpi=300):
@@ -70,8 +91,9 @@ def decode_barcodes(areas, image, dpi=300):
         # 解码并验证格式
         try:
             decoded = decode_custom_barcode(binary_str, DECODING_TABLE)
-            if decoded.startswith("start") and decoded.endswith("end"):
-                return decoded[5:-3]  # 去除start(5)和end(3)
+            print(decoded)
+            # if decoded.startswith("start") and decoded.endswith("end"):
+            #     return decoded[5:-3]  # 去除start(5)和end(3)
         except ValueError:
             continue
     
