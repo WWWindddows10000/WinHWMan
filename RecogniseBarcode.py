@@ -38,7 +38,7 @@ def recognise(image):
         x, y, w, h = cv2.boundingRect(cnt)  
         aspect_ratio = w / h
         # 添加条件：y坐标需大于顶部阈值
-        if aspect_ratio > 3 and y > top_threshold_pixels and w > 35 and h > 12:
+        if aspect_ratio > 1.5 and y > top_threshold_pixels and w > 35:
             barcode_contours.append((x, y, w, h))
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)  
     return barcode_contours
@@ -150,3 +150,6 @@ scanner = scan.SilentScanner()
 scanner.scan()
 image = cv2.imread('scanned.jpg')
 decode(image)
+cv2.imshow('Detected Barcode', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
