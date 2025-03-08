@@ -54,4 +54,7 @@ class SilentScanner:
         except Exception as e:
             print(f"扫描失败: {e}")
         return False
-    
+
+if __name__ == "__main__":
+    scanner = SilentScanner()
+    scanner.scan()
