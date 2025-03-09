@@ -1,0 +1,8 @@
+{
+    "Welcome" : "*******************WinHWMan*******************\n||      What do you wish to do today?       ||\n||- Enter ----------------------------------||\n||      [1] Scan a homework or test         ||\n||      [X] Visit my homeworks(tests)       ||\n||      [X] Check my wrong book             ||\n||      [X] Check my class notes            ||\n||      [X] Check my work sheets            ||\n||      [X] Analyze my tests                ||\n||      [q] Quit system                     ||\n**********************************************\n",
+    "ScanErr" : "*******************Scanning*******************\n||           Something went wrong.          ||\n==============================================\n",
+    "ScanCom" : "*******************Scanning*******************\n||                 Complete.                ||\n==============================================\n||     [1] Continue scanning this file      ||\n||     [2] Scan another file                ||\n||     [3] Change HWID                      ||\n||     [4] Scan again                       ||\n||     [5] Quit and scan another file       ||\n||     [6] Quit scanning                    ||\n||--FID:------------------------------------||\n",
+    "ChangeFID" : "******************Change FID******************\n||                Input FID:                ||\n----------------------------------------------\n",
+    "Scanning" : "Scanning ..."
+}
+

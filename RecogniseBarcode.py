@@ -168,10 +168,10 @@ def decode(image):
     print(res)
     return res
 
-scanner = scan.SilentScanner()
-scanner.scan()
-image = cv2.imread('scanned.jpg')
-decode(image)
-cv2.imshow('Detected Barcode', image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# scanner = scan.SilentScanner()
+# scanner.scan()
+# image = cv2.imread('scanned.jpg')
+# decode(image)
+# cv2.imshow('Detected Barcode', image)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()

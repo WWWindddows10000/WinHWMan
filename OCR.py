@@ -56,4 +56,4 @@ def scanOcr():
     all_texts = extract_ocr_text(result)
     for text in all_texts:
         print(text)
-    return text[0]
+    return text.split('\n')[0]
