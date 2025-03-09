@@ -4,7 +4,7 @@ import scanner as scan
 import numpy as np
 from PIL import Image
 
-ocr = PaddleOCR(use_angle_cls=True, lang='ch')
+
 
 def extract_ocr_text(result):
     texts = []
@@ -21,6 +21,7 @@ def extract_ocr_text(result):
     return texts
 
 def scanOcr():
+    ocr = PaddleOCR(use_angle_cls=True, lang='ch')
     scanner = scan.SilentScanner()
     scanner.scan()
     # OCR识别
@@ -54,6 +55,9 @@ def scanOcr():
 
     # 提取并打印所有文本
     all_texts = extract_ocr_text(result)
-    for text in all_texts:
-        print(text)
-    return text.split('\n')[0]
+    return all_texts[0].split('\n')[0].append("-1")
+
+def ScanPage(FID,page):
+    scanner = scan.SilentScanner()
+    scanner.scan()
+    return "{}-{}".format(FID,page)

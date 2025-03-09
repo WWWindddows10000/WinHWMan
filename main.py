@@ -11,7 +11,8 @@ import OCR
 import os
 import json
 import shutil
-
+from sort import *
+fileloca = "D:\\WINHWFile"
 def copy_file(source, destination):
     try:
         shutil.copy(source, destination)
@@ -28,9 +29,19 @@ while True:
     if aa == 'q':
         os._exit(0)
     if aa == '1':
-        TID = OCR.scanOcr()
-        copy_file("scanned.jpg","D:\WINHWFile\{}.jpg".format(TID))
-        print("SCAN OK.TID:{}".format(TID))
-        time.sleep(2)
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        page = 1
+        FID = OCR.scanOcr()
+        loca = sort(FID,fileloca)
+        copy_file("scanned.jpg",loca)
+        print("OK,FID:{}".format(FID))
+    if aa == '2':
+        page += 1
+        FID = OCR.scanPage(FID,page)
+        loca = sort(FID,fileloca)
+        copy_file("scanned.jpg",loca)
+        print("OK,FID:{}".format(FID))
+
+
+
+        
 
