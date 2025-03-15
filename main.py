@@ -36,7 +36,7 @@ while True:
         print("OK,FID:{}".format(FID))
     if aa == '2':
         page += 1
-        FID = OCR.scanPage(FID,page)
+        FID = OCR.ScanPage(FID[:-2],page)
         loca = sort(FID,fileloca)
         copy_file("scanned.jpg",loca)
         print("OK,FID:{}".format(FID))

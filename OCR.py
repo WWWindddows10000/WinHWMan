@@ -55,7 +55,7 @@ def scanOcr():
 
     # 提取并打印所有文本
     all_texts = extract_ocr_text(result)
-    return all_texts[0].split('\n')[0].append("-1")
+    return all_texts[0].split('\n')[0]+'-1'
 
 def ScanPage(FID,page):
     scanner = scan.SilentScanner()
